@@ -13,7 +13,7 @@ node{
       //  withSonarQubeEnv('sonar') { 
         //  sh "${mvnHome}/bin/mvn sonar:sonar"
       //  }
-    }
+   // }
     
     stage ('Build Docker Image') {
      sh 'docker build -t yashasvinerali/my-app:1 .'
