@@ -1,6 +1,6 @@
 node{
    stage('SCM Checkout'){
-     git 'https://github.com/YashasviNerali/sample-web-application-1'
+     git 'https://github.com/YashasviNerali/devopscicd'
    }
    stage('Compile-Package'){
       // Get maven home path
@@ -20,8 +20,8 @@ node{
    }
    
    stage('Push Docker image'){
-   withCredentials([string(credentialsId: 'docker-password', variable: 'dockerHubPwd')]) {
-   sh "docker login -u yashasvinerali -p ${dockerHubPwd}"
+   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+   sh "docker login -u yashasvinerali -p ${docker_password}"
 }
   
    sh 'docker push yashasvinerali/my-app:1'
