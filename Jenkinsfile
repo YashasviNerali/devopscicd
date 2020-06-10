@@ -1,79 +1,31 @@
-currentBuild.displayName = "Final_Demo # "+currentBuild.number
-
-   def getDockerTag(){
-        def tag = sh script: 'git rev-parse HEAD', returnStdout: true
-        return tag
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/YashasviNerali/sample-web-application-1'
+   }
+   stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'maven', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
+   
+   stage('SonarQube Analysis') {
+        def mvnHome =  tool name: 'maven', type: 'maven'
+        withSonarQubeEnv('sonar') { 
+          sh "${mvnHome}/bin/mvn sonar:sonar"
         }
-        
-
-pipeline{
-        agent any  
-        environment{
-	    Docker_tag = getDockerTag()
-        }
-        
-        stages{
-
-
-              stage('Quality Gate Statuc Check'){
-
-               agent {
-                docker {
-                image 'maven'
-                args '-v $HOME/.m2:/root/.m2'
-                }
-            }
-                  steps{
-                      script{
-                      withSonarQubeEnv('sonarserver') { 
-                      sh "mvn sonar:sonar"
-                       }
-                      timeout(time: 1, unit: 'HOURS') {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                      }
-                    }
-		    sh "mvn clean install"
-                  }
-                }  
-              }
-
-
-
-              stage('build')
-                {
-              steps{
-                  script{
-		 sh 'cp -r ../devops-training@2/target .'
-                   sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
-		   withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
-				    
-				  sh 'docker login -u deekshithsn -p $docker_password'
-				  sh 'docker push deekshithsn/devops-training:$Docker_tag'
-			}
-                       }
-                    }
-                 }
-		 
-		stage('ansible playbook'){
-			steps{
-			 	script{
-				    sh '''final_tag=$(echo $Docker_tag | tr -d ' ')
-				     echo ${final_tag}test
-				     sed -i "s/docker_tag/$final_tag/g"  deployment.yaml
-				     '''
-				    ansiblePlaybook become: true, installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml'
-				}
-			}
-		}
-		
-	
-		
-               }
-	       
-	       
-	       
-	      
+    }
     
+    stage ('Build Docker Image') {
+     sh 'docker build -t yashasvinerali/my-app:1 .'
+   }
+   
+   stage('Push Docker image'){
+   withCredentials([string(credentialsId: 'docker-password', variable: 'dockerHubPwd')]) {
+   sh "docker login -u yashasvinerali -p ${dockerHubPwd}"
 }
+  
+   sh 'docker push yashasvinerali/my-app:1'
+   
+
+
+     
