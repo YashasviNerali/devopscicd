@@ -26,6 +26,10 @@ node{
   
    sh 'docker push yashasvinerali/my-app:1'
    
+   
+   
+   
+   
    }
 
 
