@@ -36,13 +36,13 @@ node{
             		
    }
    stage ('Terraform Init') {
-      print "Init Provider" 
+      print "Initialize Provider" 
       sh "terraform init"
     }
 
 
     stage ('Terraform Validate') {
-      print "Validating The TF Files"
+      print "Validating  Files"
       sh "terraform validate"
     }
     
