@@ -52,7 +52,7 @@ node{
         terraform plan  -out=s3b.tfplan
         """ 
                     }  
-    }
+    
 
   
     stage ('Terraformm Apply') {
