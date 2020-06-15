@@ -35,6 +35,34 @@ node{
                		
             		
    }
+   stage ('Terraform Init') {
+      print "Init Provider" 
+      sh "terraform init"
+    }
+
+
+    stage ('Terraform Validate') {
+      print "Validating The TF Files"
+      sh "terraform validate"
+    }
+    
+    stage ('Terraform Plan') {
+             sh """
+        set +x
+        terraform plan  -out=s3b.tfplan
+        """ 
+                    }  
+    }
+
+  
+    stage ('Terraform Apply') {
+      
+        sh """
+        set +x
+        terraform apply s3b.tfplan
+        """
+       }  
+    
    }
 
 
