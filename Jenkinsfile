@@ -29,7 +29,7 @@ node{
    
    
    }
-   stage ('Deploy Pod to Kubernetes Cluster'){
+   stage ('Deploy Pod to Kubernetees Cluster'){
           
     	 kubernetesDeploy(configs: 'deployment.yaml',kubeconfigId: 'kubernetesid')
                		
