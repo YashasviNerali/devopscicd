@@ -2,18 +2,18 @@ node{
    stage('SCM Checkout'){
      git 'https://github.com/YashasviNerali/devopscicd'
    }
-   //stage('Compile-Package'){
-    //  // Get maven home path
-    //  def mvnHome =  tool name: 'maven', type: 'maven'   
-    //  sh "${mvnHome}/bin/mvn package"
-  // }
+   stage('Compile-Package'){
+   //    Get maven home path
+       def mvnHome =  tool name: 'maven', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
+   }
    
-   //stage('SonarQube Analysis') {
-    //    def mvnHome =  tool name: 'maven', type: 'maven'
-      //  withSonarQubeEnv('sonar') { 
-        //  sh "${mvnHome}/bin/mvn sonar:sonar"
-      //  }
-   // }
+    stage('SonarQube Analysis') {
+        def mvnHome =  tool name: 'maven', type: 'maven'
+        withSonarQubeEnv('sonar') { 
+          sh "${mvnHome}/bin/mvn sonar:sonar"
+        }
+    }
     
     stage ('Build Docker Image') {
      sh 'docker build -t yashasvinerali/my-app:1 .'
