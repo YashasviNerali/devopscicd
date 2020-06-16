@@ -3,7 +3,7 @@ node{
      git 'https://github.com/YashasviNerali/devopscicd'
    }
    stage('Compile-Package'){
-   //    Get maven home path
+   //    Get maven home path here
        def mvnHome =  tool name: 'maven', type: 'maven'   
       sh "${mvnHome}/bin/mvn package"
    }
