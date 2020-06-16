@@ -55,7 +55,7 @@ node{
     
 
   
-    stage ('Terraformm Apply') {
+    stage ('Terraform Apply') {
       
         sh """
         set +x
